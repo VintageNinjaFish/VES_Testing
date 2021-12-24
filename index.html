@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>VES_2022</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body class="dark">
+   <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <title>%UNITY_WEB_NAME%</title>
+
+      <link rel="stylesheet" href="/TemplateData/style.css" />
+
+      <script src="https://nexplayer.nexplayersdk.com/latest/nexplayer.js"></script>
+      <script src="https://d1s68t328djb4k.cloudfront.net/webgl/v1.0/NexPlayerUnity.js"></script>
+      <!-- <script src="js/NexPlayerUnity.js"></script> -->
+   </head>
+
+   <body>
+    <!-- Unity Container -->
     <div id="unity-container" class="unity-desktop">
+
+      <!-- Nexplayer Logo-->
+      <img src="TemplateData/NexPlayer_logo_white_bckg.png" id= "nexPlayer_Logo" alt="Nexplayer_Logo" width="374" height="153">
+      <br><br><br>
+
+      <!-- Unity WebGL will be here -->
       <canvas id="unity-canvas"></canvas>
-    </div>
-    <div id="loading-cover" style="display:none;">
-      <div id="unity-loading-bar">
-        <div id="unity-logo"><img src="logo.png"></div>
-        <div id="unity-progress-bar-empty" style="display: none;">
-          <div id="unity-progress-bar-full"></div>
+
+        <div id="unity-footer">
+          <div id="unity-fullscreen-button"></div>
+          <div id="unity-build-title">VES_2022</div>
         </div>
-        <div class="spinner"></div>
-      </div>
     </div>
-    <div id="unity-fullscreen-button" style="display: none;"></div>
+      
+
     <script>
-      const hideFullScreenButton = "";
-      const buildUrl = "Build";
-      const loaderUrl = buildUrl + "/VES.loader.js";
-      const config = {
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/VES.loader.js";
+      var config = {
         dataUrl: buildUrl + "/VES.data",
         frameworkUrl: buildUrl + "/VES.framework.js",
         codeUrl: buildUrl + "/VES.wasm",
@@ -36,57 +43,31 @@
         productVersion: "0.1",
       };
 
-      const container = document.querySelector("#unity-container");
-      const canvas = document.querySelector("#unity-canvas");
-      const loadingCover = document.querySelector("#loading-cover");
-      const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
-      const progressBarFull = document.querySelector("#unity-progress-bar-full");
-      const fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      const spinner = document.querySelector('.spinner');
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
 
-      const canFullscreen = (function() {
-        for (const key of [
-            'exitFullscreen',
-            'webkitExitFullscreen',
-            'webkitCancelFullScreen',
-            'mozCancelFullScreen',
-            'msExitFullscreen',
-          ]) {
-          if (key in document) {
-            return true;
-          }
-        }
-        return false;
-      }());
+      
+      canvas.style.width = "960px";
+      canvas.style.height = "600px";
+      
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        config.devicePixelRatio = 1;
-      }
-      loadingCover.style.display = "";
-
-      const script = document.createElement("script");
+      var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          spinner.style.display = "none";
-          progressBarEmpty.style.display = "";
-          progressBarFull.style.width = `${100 * progress}%`;
+        createUnityInstance(canvas, config, 
+        (progress) => {
+          //progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
-          loadingCover.style.display = "none";
-          if (canFullscreen) {
-            if (!hideFullScreenButton) {
-              fullscreenButton.style.display = "";
-            }
-            fullscreenButton.onclick = () => {
-              unityInstance.SetFullscreen(1);
-            };
-          }
+          //loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
     </script>
-  </body>
+   </body>
 </html>
